@@ -18,32 +18,38 @@ session = DBSession()
 @app.route('/')
 @app.route('/catalog')
 def showCatalog():
-    return "This page will show all catalog items with latest added items"
+    #return "This page will show all catalog items with latest added items"
+    return render_template('catalog.html',category = category)
 
 # Function shows all items in a specific category
 @app.route('/catalog/<int:category_id>/items')
 def showCategoryItem(category_id):
-    return "This page will display information about the seleted item from specific category"
+    #return "This page will display information about the seleted item from specific category"
+    return render_template('categoryItem.html',category = category)
 
 # Function shows specific information about that item
 @app.route('/catalog/<int:category_id>/<int:item_id>')
 def showItem(category_id,item_id):
-    return "this page will display information about a specific item"
+    #return "this page will display information about a specific item"
+    return render_template('item.html',category = category)
 
 # Function shows specific information about that item
 @app.route('/catalog/new')
 def newItem():
-    return "this page add a new item"
+    #return "this page add a new item"
+    return render_template('newItem.html',category = category)
 
 # Function shows specific information about that item
 @app.route('/catalog/<int:category_id>/<int:item_id>/edit')
 def editItem(category_id,item_id):
-    return "this page edit a Item"
+    #return "this page edit a Item"
+    return render_template('editItem.html',category = category)
 
 # Function shows specific information about that item
 @app.route('/catalog/<int:category_id>/<int:item_id>/delete')
 def deleteItem(category_id,item_id):
-    return "this page delete a Item"
+    #return "this page delete a Item"
+    return render_template('deleteItem.html',category = category)
 
 # --------------------------------------
 # JSON APIs to show Catalog information
