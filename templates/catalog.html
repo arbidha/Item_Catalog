@@ -1,5 +1,15 @@
-<html>
-    <body>
-        
-    </body>
-</html>
+{% extends "main.html" %}
+{% block content %}
+
+   
+    <h1>Catalog App</h1>
+        <h2>Categories</h2>
+        {% for c in category %} 
+            <p>{{c.name}}</p>
+        {% endfor %}
+
+        <h2>Latest Items</h2>
+        {% for i in latestItems %} 
+            <p>{{i.id}}  :   {{i.title}}   : ({{i.category.name}} ) </p>
+        {% endfor %}
+{% endblock %}
