@@ -13,8 +13,10 @@ Base.metadata.bind = engine
 DBSession = sessionmaker(bind=engine)
 session = DBSession()
 
+# ---------------------------------------------------------
+# Function shows all catalog items including latest 5 item
+# ---------------------------------------------------------
 
-# Function shows all catalog items including latest items
 @app.route('/')
 @app.route('/catalog')
 def showCatalog():
@@ -23,13 +25,28 @@ def showCatalog():
     #return "This page will show all catalog items with latest added items"
     return render_template('catalog.html',category = category, latestItems = latestItems)
 
+# ---------------------------------------------------------
 # Function shows all items in a specific category
-@app.route('/catalog/<int:category_id>/items')
-def showCategoryItem(category_id):
-    return "This page will display information about the seleted item from specific category"
-    #return render_template('categoryItem.html',category = category)
+# ---------------------------------------------------------
+
+@app.route('/catalog/<string:category_name>/items',methods =['GET','POST'])
+def showCategoryItem(category_name):
+    category = session.query(Category)
+    #category_name = category_name[0]
+    #print category_name
+    categoryId = session.query(Category).filter_by(name = category_name).one()
+    categoryid = categoryId.id
+    print categoryid
+    categoryItems = session.query(CategoryItem).filter_by(category_id = categoryid).all()
+    print categoryItems
+    categoryName = session.query(Category).filter_by(id = categoryid).one()
+    count = session.query(CategoryItem).filter_by(category_id = categoryid).count()  
+    #return "This page will display information about the seleted item from specific category %s ", category_name
+    #return "categoryid"
+    return render_template('categoryItem.html',category = category, items = categoryItems , categoryName = categoryName, count = count)
 
 # Function shows specific information about that item
+#@app.route('/catalog/<string:category_name>/<int:category_id>/<int:item_id>')
 @app.route('/catalog/<int:category_id>/<int:item_id>')
 def showItem(category_id,item_id):
     return "this page will display information about a specific item"

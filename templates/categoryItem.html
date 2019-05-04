@@ -1,0 +1,22 @@
+{% extends "main.html" %}
+{% block content %}
+
+   
+    <h1>Catalog App</h1>
+        <h2>Categories</h2>
+        {% for c in category %} 
+            <p><a href = "{{url_for('showCategoryItem',category_name = c.name)}}" >{{c.name}} </a></p>
+        {% endfor %}
+
+        {% if count != 0 %}
+        <h2>{{categoryName.name}} items </h2> <h5>( {{count}} items)</h5>
+            {% for i in items %} 
+                <p> <a href="{{url_for('showItem',category_id = i.category_id ,item_id = i.id)}}"> {{i.title}} </a> </p>
+            {% endfor %}
+        {% else %}
+            <h2>{{categoryName.name}} items </h2>
+            <p>Currently you have no items</p>
+        {% endif %}
+
+        
+{% endblock %}

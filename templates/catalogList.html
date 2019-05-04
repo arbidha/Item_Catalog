@@ -1,0 +1,4 @@
+<h2>Latest Items</h2>
+        {% for i in latestItems %} 
+            <p>{{i.id}}  :   {{i.title}}   : ({{i.category.name}} ) </p>
+        {% endfor %}
