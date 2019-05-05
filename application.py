@@ -43,7 +43,10 @@ def showCategoryItem(category_name):
     #return "categoryid"
     return render_template('categoryItem.html',category = category, items = categoryItems , categoryName = categoryName, count = count)
 
+# ---------------------------------------------------------
 # Function shows specific information about that item
+# ---------------------------------------------------------
+
 @app.route('/catalog/<string:category_name>/<int:item_id>')
 def showItem(category_name,item_id):
     item = session.query(CategoryItem).filter_by(id = item_id).one()
@@ -51,11 +54,29 @@ def showItem(category_name,item_id):
     #return "this page will display information about a specific item"
     return render_template('item.html',item = item , category_name = category_name )
 
-# Function shows specific information about that item
-@app.route('/catalog/new')
+# ---------------------------------------------------------
+# Function to add a new Item 
+# ---------------------------------------------------------
+
+@app.route('/catalog/new',methods =['GET','POST'])
 def newItem():
-    return "this page add a new item"
-    #return render_template('newItem.html',category = category)
+    print "inside new item"
+    categories = session.query(Category)
+    if request.method == 'POST':
+        print request.form['category_name']
+        category_name = request.form['category_name']
+        category_id = session.query(Category).filter_by(name = category_name).one()
+        Category.user_id = 1
+        new_Item = CategoryItem(title=request.form['title'], description=request.form[
+                           'description'], category_id = category_id.id,user_id=Category.user_id)           
+        session.add(new_Item)
+        session.commit()
+        flash("New Menu Created")
+        return redirect(url_for('showCatalog'))
+    else:
+       return render_template('newItem.html', categories = categories)
+    #return "this page add a new item"
+
 
 # Function shows specific information about that item
 @app.route('/catalog/<int:category_id>/<int:item_id>/edit')

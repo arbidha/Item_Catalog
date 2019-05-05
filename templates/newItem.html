@@ -1,0 +1,28 @@
+{% extends "main.html" %}
+{% block content %}
+
+    <h1>New Item </h1>
+
+    <form action="{{url_for('newItem')}}" method = 'POST'>
+            <p for="name"> Title :</p>
+            <input type ="text" maxlength="100"  name="title">
+    </br></br>
+            <p>Description:</p>
+            <textarea maxlength="250" rows="3" name="description"></textarea>
+
+
+            <label for="category-selector">Category:</label>
+                <select name="category_name" id="category-selector">
+                    {% for category in categories %}
+                        <option value="{{category.name}}">{{category.name}}</option>
+                    {% endfor %}
+             </select>
+
+        <button type='submit' value='submit'> Create </button>
+    </form>
+       
+    
+
+    <a href= "{{url_for('showCatalog')}}"> Cancel</a>
+
+{% endblock %}

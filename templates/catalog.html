@@ -8,6 +8,8 @@
             <p><a href = "{{url_for('showCategoryItem',category_name = c.name)}}" >{{c.name}}</a></p>
         {% endfor %}
 
+        <h2> <a href="{{url_for('newItem')}}"> Add Item </a> </h2>
+
         {% include "catalogList.html" %}
         
 {% endblock %}
