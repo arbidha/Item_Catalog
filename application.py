@@ -32,8 +32,6 @@ def showCatalog():
 @app.route('/catalog/<string:category_name>/items',methods =['GET','POST'])
 def showCategoryItem(category_name):
     category = session.query(Category)
-    #category_name = category_name[0]
-    #print category_name
     categoryId = session.query(Category).filter_by(name = category_name).one()
     categoryid = categoryId.id
     print categoryid
@@ -46,11 +44,12 @@ def showCategoryItem(category_name):
     return render_template('categoryItem.html',category = category, items = categoryItems , categoryName = categoryName, count = count)
 
 # Function shows specific information about that item
-#@app.route('/catalog/<string:category_name>/<int:category_id>/<int:item_id>')
-@app.route('/catalog/<int:category_id>/<int:item_id>')
-def showItem(category_id,item_id):
-    return "this page will display information about a specific item"
-    #return render_template('item.html',category = category)
+@app.route('/catalog/<string:category_name>/<int:item_id>')
+def showItem(category_name,item_id):
+    item = session.query(CategoryItem).filter_by(id = item_id).one()
+    print item.description
+    #return "this page will display information about a specific item"
+    return render_template('item.html',item = item , category_name = category_name )
 
 # Function shows specific information about that item
 @app.route('/catalog/new')
