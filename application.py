@@ -78,11 +78,47 @@ def newItem():
     #return "this page add a new item"
 
 
-# Function shows specific information about that item
-@app.route('/catalog/<int:category_id>/<int:item_id>/edit')
-def editItem(category_id,item_id):
-    return "this page edit a Item"
-    #return render_template('editItem.html',category = category)
+# ---------------------------------------------------------
+# Function to edit a new Item 
+# ---------------------------------------------------------
+@app.route('/catalog/<string:category_name>/<int:item_id>/edit',methods =['GET','POST'])
+def editItem(category_name,item_id):
+    print "inside editItem"
+    print category_name
+    print item_id
+    categories = session.query(Category)
+    editeditem = session.query(CategoryItem).filter_by(id = item_id).one()
+    if request.method == 'POST':
+        print("editpost")
+
+        '''Allows user to edit item name'''
+        if request.form['name']:
+            print("nameeditpost")
+            print(request.form['name'])
+            editeditem.title = request.form['name']
+
+        '''Allows user to edit item description'''
+        if request.form['description']:
+            print("description")
+            print(request.form['description'])
+            editeditem.description = request.form['description']
+
+        '''Allows user to edit item description'''
+        if request.form['category']:
+            print("category")
+            print(request.form['category'])
+            editeditem.category_id = request.form['category']
+
+        session.add(editeditem)
+        print("add")
+        session.commit()
+        flash("Item Edited Successfuly")
+        return redirect(url_for('showCatalog'))
+        #return redirect(url_for('showCategoryItem', category_name = categories.name))
+    else:
+        return render_template('editItem.html',categories = categories ,category_name = category_name ,item = editeditem  )
+    #return "this page edit a Item"
+    
 
 # Function shows specific information about that item
 @app.route('/catalog/<int:category_id>/<int:item_id>/delete')
