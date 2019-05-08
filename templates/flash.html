@@ -1,0 +1,6 @@
+
+{% with message = get_flashed_messages() %}
+    {% if message %}
+        <strong> {{ message }} </strong>
+    {% endif %}
+{% endwith %}

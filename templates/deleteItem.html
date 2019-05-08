@@ -1,0 +1,25 @@
+{% extends "main.html" %}
+{% block content %}
+    <h1>Delete Item </h1>
+
+    {% with message = get_flashed_messages() %}
+    {% if message %}
+        <strong> {{ message }} </strong>
+    {% endif %}
+{% endwith %}   
+
+    <h2> Are you sure you want to delete {{item.title}} ? </h2></br>
+
+    <form action="{{url_for('deleteItem',category_name = category_name ,item_id = item.id)}}" method = 'post'>
+
+
+    <button type='submit' value='Delete'> Delete</button>
+
+    <button>   
+            <a href= "{{url_for('showCategoryItem', category_name = category_name)}}">		
+                <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel</button>
+            </a>
+</form>
+
+
+{% endblock %}

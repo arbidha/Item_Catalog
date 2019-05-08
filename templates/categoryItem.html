@@ -1,8 +1,13 @@
 {% extends "main.html" %}
 {% block content %}
-
+        
    
     <h1>Catalog App</h1>
+    {% with message = get_flashed_messages() %}
+    {% if message %}
+        <strong> {{ message }} </strong>
+    {% endif %}
+{% endwith %}
         <h2>Categories</h2>
         {% for c in category %} 
             <p><a href = "{{url_for('showCategoryItem',category_name = c.name)}}" >{{c.name}} </a></p>

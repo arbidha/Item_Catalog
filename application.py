@@ -121,10 +121,27 @@ def editItem(category_name,item_id):
     
 
 # Function shows specific information about that item
-@app.route('/catalog/<int:category_id>/<int:item_id>/delete')
-def deleteItem(category_id,item_id):
-    return "this page delete a Item"
-    #return render_template('deleteItem.html',category = category)
+@app.route('/catalog/<string:category_name>/<int:item_id>/delete',methods =['GET','POST'])
+def deleteItem(category_name,item_id):
+    print "inside Delete Item"
+    print category_name
+    print item_id
+    categories = session.query(Category)
+    deletedItem = session.query(CategoryItem).filter_by(id = item_id).one()
+    print "After Queries"
+    '''Allows user to delete item '''
+    print(request.method)
+
+    if request.method == 'POST':
+        print("deletepost")
+        session.delete(deletedItem)
+        print(deletedItem)
+        session.commit()
+        print("commit")
+        flash("Item Deleted Successfuly ")
+        return redirect(url_for('showCategoryItem', category_name = category_name ))
+    else:
+        return render_template('deleteItem.html',category = categories,category_name = category_name ,item = deletedItem)
 
 # --------------------------------------
 # JSON APIs to show Catalog information

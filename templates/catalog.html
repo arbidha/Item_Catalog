@@ -1,6 +1,11 @@
 {% extends "main.html" %}
 {% block content %}
 
+    {% with message = get_flashed_messages() %}
+    {% if message %}
+        <strong> {{ message }} </strong>
+    {% endif %}
+    {% endwith %}
    
     <h1>Catalog App</h1>
         <h2>Categories</h2>
