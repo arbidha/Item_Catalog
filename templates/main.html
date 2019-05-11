@@ -13,7 +13,21 @@
 			<!-- Optional theme -->
 			<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap-theme.min.css" integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp" crossorigin="anonymous">
 			<link rel=stylesheet type=text/css href="{{ url_for('static', filename='style.css') }}">
+
+			<!-- Google sign in  -->
+			<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+			<script src="https://apis.google.com/js/client:platform.js?onload=start" async defer></script>
+			<script>
+				function start() {
+					gapi.load('auth2', function() {
+						auth2 = gapi.auth2.init({
+							client_id: '429823502311-fk7lf7nnc579o1hpq3lpse2k2iduugfn.apps.googleusercontent.com'
+						});
+					});
+				}
+			</script>
 	</head>
+
  		<body>
 		<div>
 			    <nav class="navbar navbar-inverse">
@@ -39,7 +53,7 @@
 
 
 		<!-- Footer -->
-		<footer class="page-footer font-small special-color-dark pt-4">
+		<footer class="page-footer special-color-dark pt-4">
 	  
 	  </footer>
 	  <!-- Footer -->	  

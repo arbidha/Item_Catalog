@@ -126,6 +126,12 @@ def gconnect():
     login_session['picture'] = data['picture']
     login_session['email'] = data['email']
 
+    # see if user exists , if it doesn't make a new one
+    user_id = getUserID(login_session['email'])
+    if not user_id:
+        user_id = createUser(login_session)
+    login_session['user_id'] = user_id
+
     output = ''
     output += '<h1>Welcome, '
     output += login_session['username']
@@ -166,6 +172,15 @@ def getUserID(email):
 def gdisconnect():
     access_token = login_session['access_token']
     print 'In gdisconnect access token is %s', access_token
+
+    '''
+    revoke = requests.post('https://accounts.google.com/o/oauth2/revoke',
+         params={'token': access_token},
+         headers={'content-type': 'application/x-www-form-urlencoded'})
+    result=getattr(revoke, 'status_code')
+    status_code=getattr(revoke, 'status_code')
+    if status_code == 200:
+     '''
     print 'User name is: ' 
     print login_session['username']
     if access_token is None:
@@ -186,9 +201,11 @@ def gdisconnect():
     	del login_session['picture']
     	response = make_response(json.dumps('Successfully disconnected.'), 200)
     	response.headers['Content-Type'] = 'application/json'
-    	return response
+        flash("Successfully disconnected.")
+        return redirect(url_for('showCatalog'))
+    	#return response
     else:
-	
+
     	response = make_response(json.dumps('Failed to revoke token for given user.', 400))
     	response.headers['Content-Type'] = 'application/json'
     	return response
@@ -211,6 +228,8 @@ def showCatalog():
     #return "This page will show all catalog items with latest added items"
     #return render_template('catalog.html',category = category, latestItems = latestItems)
 
+
+
 # ---------------------------------------------------------
 # Function shows all items in a specific category
 # ---------------------------------------------------------
@@ -222,12 +241,17 @@ def showCategoryItem(category_name):
     categoryid = categoryId.id
     print categoryid
     categoryItems = session.query(CategoryItem).filter_by(category_id = categoryid).all()
-    print categoryItems
+    creator = getUserInfo(categoryId.user_id)
     categoryName = session.query(Category).filter_by(id = categoryid).one()
     count = session.query(CategoryItem).filter_by(category_id = categoryid).count()  
+
+    if 'username' not in login_session or creator.id != login_session['user_id']:
+        return render_template('publiccategoryItem.html',category = category, items = categoryItems , categoryName = categoryName, count = count ,creator = creator)
+    else:
+        return render_template('categoryItem.html',category = category, items = categoryItems , categoryName = categoryName, count = count,creator = creator)
     #return "This page will display information about the seleted item from specific category %s ", category_name
     #return "categoryid"
-    return render_template('categoryItem.html',category = category, items = categoryItems , categoryName = categoryName, count = count)
+   
 
 # ---------------------------------------------------------
 # Function shows specific information about that item
@@ -237,6 +261,10 @@ def showCategoryItem(category_name):
 def showItem(category_name,item_id):
     item = session.query(CategoryItem).filter_by(id = item_id).one()
     print item.description
+    if 'username' not in login_session:
+        return render_template('publicitem.html',item = item , category_name = category_name )
+    else:
+        return render_template('item.html',item = item , category_name = category_name )
     #return "this page will display information about a specific item"
     return render_template('item.html',item = item , category_name = category_name )
 
@@ -246,18 +274,19 @@ def showItem(category_name,item_id):
 
 @app.route('/catalog/new',methods =['GET','POST'])
 def newItem():
+    if 'username' not in login_session:
+        return redirect('/login')
     print "inside new item"
     categories = session.query(Category)
     if request.method == 'POST':
         print request.form['category_name']
         category_name = request.form['category_name']
         category_id = session.query(Category).filter_by(name = category_name).one()
-        Category.user_id = 1
         new_Item = CategoryItem(title=request.form['title'], description=request.form[
-                           'description'], category_id = category_id.id,user_id=Category.user_id)           
+                           'description'], category_id = category_id.id,user_id=login_session['user_id'])           
         session.add(new_Item)
         session.commit()
-        flash("New Menu Created")
+        flash("New Item %s Created successfully" % new_Item.title)
         return redirect(url_for('showCatalog'))
     else:
        return render_template('newItem.html', categories = categories)
@@ -269,11 +298,17 @@ def newItem():
 # ---------------------------------------------------------
 @app.route('/catalog/<string:category_name>/<int:item_id>/edit',methods =['GET','POST'])
 def editItem(category_name,item_id):
+    if 'username' not in login_session:
+        return redirect('/login')
     print "inside editItem"
     print category_name
     print item_id
     categories = session.query(Category)
     editeditem = session.query(CategoryItem).filter_by(id = item_id).one()
+
+    if editeditem.user_id != login_session['user_id']:
+        return "<script>function myFunction() {alert('You are not authorized to edit this Item. Please create your own Item in order to edit.'); }</script><body onload='myFunction()''>"
+
     if request.method == 'POST':
         print("editpost")
 
@@ -298,7 +333,7 @@ def editItem(category_name,item_id):
         session.add(editeditem)
         print("add")
         session.commit()
-        flash("Item Edited Successfuly")
+        flash("Item %s Edited Successfuly" % editeditem.title )
         return redirect(url_for('showCatalog'))
         #return redirect(url_for('showCategoryItem', category_name = categories.name))
     else:
@@ -309,6 +344,9 @@ def editItem(category_name,item_id):
 # Function shows specific information about that item
 @app.route('/catalog/<string:category_name>/<int:item_id>/delete',methods =['GET','POST'])
 def deleteItem(category_name,item_id):
+    if 'username' not in login_session:
+        return redirect('/login')
+
     print "inside Delete Item"
     print category_name
     print item_id
@@ -317,6 +355,10 @@ def deleteItem(category_name,item_id):
     print "After Queries"
     '''Allows user to delete item '''
     print(request.method)
+    
+    if deletedItem.user_id != login_session['user_id']:
+        return "<script>function myFunction() {alert('You are not authorized to delete this Item. Please create your own Item.');}</script><body onload='myFunction()''>"
+
 
     if request.method == 'POST':
         print("deletepost")
@@ -340,12 +382,19 @@ def catalogsJSON():
     return jsonify(Category = [dict(c.serialize, items=[i.serialize for i in c.items])
                          for c in categories])
 
+@app.route('/catalog/user.json')
+def userJSON():
+    """Returns JSON of all items in catalog"""
+    users = session.query(User).all()
+    return jsonify(User = [u.serialize for u in users ])
+
 @app.route('/catalog/<int:category_id>/JSON')
 def catalogJSON(category_id):
     """Returns JSON of selected item in catalog"""
     category = session.query(Category).options(joinedload(Category.items)).filter_by(id=category_id).all()
     return jsonify(Category = [dict(c.serialize, items=[i.serialize for i in c.items])
                          for c in category])
+
 
 @app.route('/catalog/<int:category_id>/<int:item_id>/JSON')
 def catalogItemJSON(category_id, item_id):
