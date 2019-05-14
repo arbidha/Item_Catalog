@@ -98,6 +98,7 @@ Item1 = CategoryItem(user_id=1, title="Gloves & Mitts", description="Gloves feat
 
 session.add(Item1)
 session.commit()
+print "Baseball added"
 
 # Category Frisbee
 category4 = Category(user_id=1, name="Frisbee")
@@ -134,3 +135,5 @@ category9 = Category(user_id=1, name="Hockey")
 
 session.add(category9)
 session.commit()
+
+print "Added all item"

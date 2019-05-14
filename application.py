@@ -172,11 +172,25 @@ def createUser(login_session):
 
 
 def getUserInfo(user_id):
+    """
+      Function to to get user information from database
+      Args:
+        user_id
+      Return:
+        user details
+    """
     user = session.query(User).filter_by(id=user_id).one()
     return user
 
 
 def getUserID(email):
+    """
+      Function to to get user details through email from database
+      Args:
+        email
+      Return:
+        user id
+    """
     try:
         user = session.query(User).filter_by(email=email).one()
         return user.id
@@ -188,17 +202,11 @@ def getUserID(email):
 
 @app.route('/gdisconnect')
 def gdisconnect():
+    """
+      Function to disconnect from google acccount
+    """
     access_token = login_session['access_token']
     print 'In gdisconnect access token is %s', access_token
-
-    '''
-    revoke = requests.post('https://accounts.google.com/o/oauth2/revoke',
-         params={'token': access_token},
-         headers={'content-type': 'application/x-www-form-urlencoded'})
-    result=getattr(revoke, 'status_code')
-    status_code=getattr(revoke, 'status_code')
-    if status_code == 200:
-    '''
     print 'User name is: %s' % login_session['username']
     if access_token is None:
         response = make_response(json.dumps('Current user not connected.'),
@@ -313,6 +321,8 @@ def showItem(category_name, item_id):
 # ---------------------------------------------------------
 # Function to add a new Item
 # ---------------------------------------------------------
+
+
 @app.route('/catalog/new', methods=['GET', 'POST'])
 def newItem():
     if 'username' not in login_session:
@@ -338,7 +348,7 @@ def newItem():
     # return "this page add a new item"
 
 # ---------------------------------------------------------
-# Function to edit a new Item
+# Function to update/edit Item information
 # ---------------------------------------------------------
 
 
@@ -392,7 +402,9 @@ def editItem(category_name, item_id):
             item=editeditem)
     # return "this page edit a Item"
 
-# Function shows specific information about that item
+# ---------------------------------------------------------
+# Function to delete a specific item from a category
+# ---------------------------------------------------------
 
 
 @app.route(
@@ -449,16 +461,18 @@ def catalogsJSON():
                     i.serialize for i in c.items]) for c in categories])
 
 
+'''
 @app.route('/catalog/user.json')
 def userJSON():
     """Returns JSON of all users in catalog"""
     users = session.query(User).all()
-    return jsonify(User=[u.serialize for u in users])
+    return jsonify(User=[u.serialize for u in users]) 
+'''    
 
 
 @app.route('/catalog/<int:category_id>/JSON')
 def catalogJSON(category_id):
-    """Returns JSON of selected item in catalog"""
+    """Returns JSON of all categories in catalog"""
     category = session.query(Category).options(
         joinedload(
             Category.items)).filter_by(
