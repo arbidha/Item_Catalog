@@ -466,8 +466,8 @@ def catalogsJSON():
 def userJSON():
     """Returns JSON of all users in catalog"""
     users = session.query(User).all()
-    return jsonify(User=[u.serialize for u in users]) 
-'''    
+    return jsonify(User=[u.serialize for u in users])
+'''
 
 
 @app.route('/catalog/<int:category_id>/JSON')
