@@ -1,31 +1,29 @@
 {% extends "main.html" %}
 {% block content %}
     <div class="container card">
-    <h2 class="font-weight-bold deep-orange-lighter-hover mb-3">{{ item.title }}</h2>
-    </br>
+        <h2 class="font-weight-bold deep-orange-lighter-hover mb-3">{{ item.title }}</h2>
+        </br>
+        <p class="brown-lighter-hover"> Description : {{ item.description }} </p>
+        </br></br>    
+        <button class="btn btn-info btn-rounded waves-effect">
+            <a href="{{url_for('editItem', category_name = category_name ,item_id = item.id )}}" style="text-decoration:none ; color: antiquewhite;">
+                <span class="glyphicon glyphicon-pencil"></span>  Edit 
+            </a>
+        </button> 
 
-    <p class="brown-lighter-hover"> Description : {{ item.description }} </p>
-    
-    </br></br>    
-    <button class="btn btn-info btn-rounded waves-effect">
-         <a href="{{url_for('editItem', category_name = category_name ,item_id = item.id )}}" style="text-decoration:none ; color: antiquewhite;">
-                <span class="glyphicon glyphicon-pencil"></span>  Edit </a>
-            </button> 
-
-                <button class="btn btn-danger btn-rounded waves-effect">     
-    <a href="{{url_for('deleteItem', category_name = category_name ,item_id = item.id )}}" style="text-decoration:none ; color: antiquewhite;" >
-        <span class="glyphicon glyphicon-trash"></span>  Delete</a>
-    </button> 
+        <button class="btn btn-danger btn-rounded waves-effect">     
+            <a href="{{url_for('deleteItem', category_name = category_name ,item_id = item.id )}}" style="text-decoration:none ; color: antiquewhite;" >
+            <span class="glyphicon glyphicon-trash"></span>  Delete
+            </a>
+        </button> 
 
         <button class="btn btn-warning btn-rounded waves-effect">
-        <a href= "{{url_for('showCategoryItem',category_name = category_name)}}" style="text-decoration:none ; color: antiquewhite;">
-                <span class="glyphicon glyphicon-backward"></span>
-                Go Back</a>
-            </button> 
-</br></br></br></br></br></br></br></br></br></br>
-
+            <a href= "{{url_for('showCategoryItem',category_name = category_name)}}" style="text-decoration:none ; color: antiquewhite;">
+                <span class="glyphicon glyphicon-backward"></span> Go Back
+            </a>
+        </button> 
+        </br></br></br></br></br></br></br></br></br></br>
     </div>
-</div>
 {% endblock %}
 
 

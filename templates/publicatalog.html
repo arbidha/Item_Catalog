@@ -1,37 +1,25 @@
 {% extends "main.html" %}
 {% block content %}
-
     {% with message = get_flashed_messages() %}
-    {% if message %}
-        <strong> {{ message }} </strong>
-    {% endif %}
+        {% if message %}
+            <strong> {{ message }} </strong>
+        {% endif %}
     {% endwith %}
-
-
-
-          <div class="container-fluid text-left">    
-                <div class="row content">
-
-                        <h2>  </h2>
-                  <div class="col-sm-2 sidenav">
-                      <h4>Categories</h4>
-                        <ul class="nav nav-pills nav-stacked">
-                                {% for c in category %} 
-                                <li>
-                                        <a href = "{{url_for('showCategoryItem',category_name = c.name)}}" >{{c.name}}</a>   
-                                </li>
-                                {% endfor %}
-                            </ul>
-
-                      
-                            </div>
-                                     
-
-                 
-                  <div class="col-sm-8 text-left"> 
-                        
-                         {% include "catalogList.html" %}
-                      </div>
-                    </div>
-             </div>             
+    <div class="container-fluid text-left">    
+        <div class="row content">
+            <div class="col-sm-2 sidenav">
+                <h4>Categories</h4>
+                <ul class="nav nav-pills nav-stacked">
+                    {% for c in category %} 
+                        <li>
+                            <a href = "{{url_for('showCategoryItem',category_name = c.name)}}" >{{c.name}}</a>   
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>                
+            <div class="col-sm-8 text-left"> 
+                {% include "catalogList.html" %}
+            </div>
+        </div>
+    </div>             
 {% endblock %}

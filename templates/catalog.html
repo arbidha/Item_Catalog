@@ -1,42 +1,29 @@
 {% extends "main.html" %}
 {% block content %}
 
-    {% with message = get_flashed_messages() %}
-    {% if message %}
-        <strong> {{ message }} </strong>
-    {% endif %}
-    {% endwith %}
-
-
-
-          <div class="container-fluid text-left">    
-                <div class="row content">
-
-                        <h2>  </h2>
+      {% with message = get_flashed_messages() %}
+            {% if message %}
+                  <strong> {{ message }} </strong>
+            {% endif %}
+      {% endwith %}
+      <div class="container-fluid text-left">    
+            <div class="row content">
                   <div class="col-sm-2 sidenav">
-
                         <ul class="nav nav-pills nav-stacked">
-                                {% for c in category %} 
-                                <li>
-                                        <a href = "{{url_for('showCategoryItem',category_name = c.name)}}" >{{c.name}}</a>   
-                                </li>
-                                {% endfor %}
-                            </ul>
-
-                      
-                            </div>
-                                     
-
-                 
+                              {% for c in category %} 
+                                    <li>
+                                          <a href = "{{url_for('showCategoryItem',category_name = c.name)}}" >{{c.name}}</a>   
+                                    </li>
+                              {% endfor %}
+                        </ul>
+                  </div>
                   <div class="col-sm-8 text-left"> 
-                        
                         <button type="button" class="btn btn-success btn-rounded">
-                                <a href="{{url_for('newItem')}}" style="text-decoration:none ; color: antiquewhite;"> 
-                                <span class="glyphicon glyphicon-plus"> </span> Add Item </a>
-                              </button> 
-
-                         {% include "catalogList.html" %}
-                      </div>
-                    </div>
-             </div>             
+                              <a href="{{url_for('newItem')}}" style="text-decoration:none ; color: antiquewhite;"> 
+                              <span class="glyphicon glyphicon-plus"> </span> Add Item </a>
+                        </button> 
+                        {% include "catalogList.html" %}
+                  </div>
+            </div>
+      </div>             
 {% endblock %}

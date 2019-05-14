@@ -1,31 +1,24 @@
 {% extends "main.html" %}
 {% block content %}
-
     {% with message = get_flashed_messages() %}
-    {% if message %}
-        <strong> {{ message }} </strong>
-    {% endif %}
-{% endwith %}   
+        {% if message %}
+            <strong> {{ message }} </strong>
+        {% endif %}
+    {% endwith %}   
 
 <div class="container card">
-        <h3 class="font-weight-bold deep-orange-lighter-hover mb-3">Delete Item</h3>
-    
-        <h4> Are you sure you want to delete {{item.title}} ? </h4></br>
-
-        <form action="{{url_for('deleteItem',category_name = category_name ,item_id = item.id)}}" method = 'post'>
-
-
-         <button type='submit' value='Delete' class="btn btn-danger btn-rounded waves-effect"> 
-                <span class="glyphicon glyphicon-trash"></span> Delete</button> 
-
-            <button class="btn btn-warning btn-rounded waves-effect">         
-                  <a href= "{{url_for('showCategoryItem', category_name = category_name)}}" style="text-decoration:none ; color: antiquewhite;">		
+    <h3 class="font-weight-bold deep-orange-lighter-hover mb-3">Delete Item</h3>
+    <h4> Are you sure you want to delete {{item.title}} ? </h4></br>
+    <form action="{{url_for('deleteItem',category_name = category_name ,item_id = item.id)}}" method = 'post'>
+        <button type='submit' value='Delete' class="btn btn-danger btn-rounded waves-effect"> 
+            <span class="glyphicon glyphicon-trash"></span> Delete
+        </button> 
+        <button class="btn btn-warning btn-rounded waves-effect">         
+            <a href= "{{url_for('showCategoryItem', category_name = category_name)}}" style="text-decoration:none ; color: antiquewhite;">		
                 <span class="glyphicon glyphicon-remove" aria-hidden="true"></span> Cancel
             </a>
         </button>
- 
-</form>
+    </form>
 </div>
 </br></br></br>
-</div>
 {% endblock %}
