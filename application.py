@@ -1,3 +1,4 @@
+#! /usr/bin/env python
 
 # Import for flask and SQLalchemy
 from flask import Flask, render_template, request, redirect
@@ -213,7 +214,7 @@ def gdisconnect():
                                  401)
         response.headers['Content-Type'] = 'application/json'
         return response
-    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']
+    url = 'https://accounts.google.com/o/oauth2/revoke?token=%s' % login_session['access_token']   # noqa
     h = httplib2.Http()
     result = h.request(url, 'GET')[0]
     print 'result is '
@@ -280,7 +281,7 @@ def showCategoryItem(category_name):
     categoryName = session.query(Category).filter_by(id=categoryid).one()
     count = session.query(CategoryItem).filter_by(
         category_id=categoryid).count()
-    if 'username' not in login_session or creator.id != login_session['user_id']:
+    if 'username' not in login_session or creator.id != login_session['user_id']:      # noqa
         return render_template(
             'publiccategoryItem.html',
             category=category,
@@ -330,7 +331,6 @@ def newItem():
     print "inside new item"
     categories = session.query(Category)
     if request.method == 'POST':
-        print request.form['category_name']
         category_name = request.form['category_name']
         category_id = session.query(Category).filter_by(
             name=category_name).one()
@@ -360,37 +360,26 @@ def newItem():
 def editItem(category_name, item_id):
     if 'username' not in login_session:
         return redirect('/login')
-    print "inside editItem"
-    print category_name
-    print item_id
     categories = session.query(Category)
-    editeditem = session.query(CategoryItem).filter_by(id=item_id).one()
+    editeditem = session.query(CategoryItem).filter_by(id=item_id).one_or_none()
 
     if editeditem.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to edit this Item. Please create your own Item in order to edit.'); }</script><body onload='myFunction()''>"
+        return "<script>function myFunction() {alert('You are not authorized to edit this Item. Please create your own Item in order to edit.'); }</script><body onload='myFunction()''>"  # noqa
 
     if request.method == 'POST':
-        print("editpost")
         '''Allows user to edit item name'''
         if request.form['name']:
-            print("nameeditpost")
-            print(request.form['name'])
             editeditem.title = request.form['name']
 
         '''Allows user to edit item description'''
         if request.form['description']:
-            print("description")
-            print(request.form['description'])
             editeditem.description = request.form['description']
 
         '''Allows user to edit item description'''
         if request.form['category']:
-            print("category")
-            print(request.form['category'])
             editeditem.category_id = request.form['category']
 
         session.add(editeditem)
-        print("add")
         session.commit()
         flash("Item %s Edited Successfuly" % editeditem.title)
         return redirect(url_for('showCatalog'))
@@ -415,22 +404,14 @@ def editItem(category_name, item_id):
 def deleteItem(category_name, item_id):
     if 'username' not in login_session:
         return redirect('/login')
-    print "inside Delete Item"
-    print category_name
-    print item_id
     categories = session.query(Category)
     deletedItem = session.query(CategoryItem).filter_by(id=item_id).one()
-    print "After Queries"
     '''Allows user to delete item '''
-    print(request.method)
     if deletedItem.user_id != login_session['user_id']:
-        return "<script>function myFunction() {alert('You are not authorized to delete this Item. Please create your own Item.');}</script><body onload='myFunction()' >"
+        return "<script>function myFunction() {alert('You are not authorized to delete this Item. Please create your own Item.');}</script><body onload='myFunction()' >"    # noqa
     if request.method == 'POST':
-        print("deletepost")
         session.delete(deletedItem)
-        print(deletedItem)
         session.commit()
-        print("commit")
         flash("Item Deleted Successfuly ")
         return redirect(
             url_for(
