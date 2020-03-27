@@ -1,7 +1,7 @@
 
 ### Project Title
 Item Catalog App
-Udacity Full Stack Nanodegree
+Freelance Project
 
 ### Description
 Item Catalog App is a dynamic RESTful web application developed using the Python framework Flask along with third-party OAuth authentication. This application deals with a SQLite database which has Category, User and Category Item tables. It is styled using Bootstrap.
